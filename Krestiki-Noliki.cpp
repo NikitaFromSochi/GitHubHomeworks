@@ -32,7 +32,7 @@ struct KrestGame {
     const size_t Size{ 4U };
     KrestCell Man;
     KrestCell Comp;
-    KrestProgress progress{ InProgress };
+    KrestProgress Progress{ InProgress };
     size_t turn{ 0U };
 };
 
@@ -63,7 +63,7 @@ void __fastcall InitGame(KrestGame& g)
         g.ppField[x][y] = Empty;
     }
 
-    if (GetRandomNum(0, 1000) % 500)
+    if (GetRandomNum(0, 1000) > 500 )
     {
         g.Man = Cross;
         g.Comp = Zero;
@@ -109,15 +109,15 @@ void __fastcall DrawGame(const KrestGame& g)
 
 void  __fastcall Congrats(const KrestGame& g)
 {
-    if (g.progress == ManWin)
+    if (g.Progress == ManWin)
         std::cout << "You win, congratulations!" << std::endl;
-    else if (g.progress == CompWin)
+    else if (g.Progress == CompWin)
         std::cout << "Sorry, but computer win :/" << std::endl;
-    else if (g.progress == Draw)
+    else if (g.Progress == Draw)
         std::cout << "No one can win in this battle!" << std::endl;
 }
 
-void GetWon(const KrestGame& g)
+ int GetWon(const KrestGame& g)
 {
     for (size_t x = 0; x < g.Size; x++)
     {
@@ -240,14 +240,14 @@ void GetWon(const KrestGame& g)
     return InProgress;
 }
 
-void __fastcall getManCoord(const KrestGame& g)
+KrestCoord GetManCoord(const KrestGame& g)
 {
     KrestCoord c;
         do
         {
-            std::cout << "Enter X: (1..4)" << std::endl;
-            cin >> c.x;
             std::cout << "Enter Y: (1..4)" << std::endl;
+            cin >> c.x;
+            std::cout << "Enter X: (1..4)" << std::endl;
             cin >> c.y;
 
             c.x--;
@@ -256,9 +256,40 @@ void __fastcall getManCoord(const KrestGame& g)
             return c;
 }
 
-void __fastcall getCompCoord(KrestGame& g)
+KrestCoord GetCompCoord(KrestGame& g)
 {
-
+    for (size_t x = 0; x < g.Size; x++)
+    {
+        for (size_t y = 0; y < g.Size; y++)
+        {
+            if (g.ppField[x][y] == Empty)
+            {
+                g.ppField[x][y] = g.Comp;
+                if (GetWon(g) == CompWin)
+                {
+                    g.ppField[x][y] == Empty;
+                    return { x, y };
+                }
+                g.ppField[x][y] == Empty;
+            }
+        }
+    }
+    for (size_t x = 0; x < g.Size; x++)
+    {
+        for (size_t y = 0; y < g.Size; y++)
+        {
+            if (g.ppField[x][y] == Empty)
+            {
+                g.ppField[x][y] = g.Man;
+                if (GetWon(g) == ManWin)
+                {
+                    g.ppField[x][y] == Empty;
+                    return { x, y };
+                }
+                g.ppField[x][y] == Empty;
+            }
+        }
+    }
 }
 
 int main()
@@ -283,9 +314,9 @@ int main()
         g.turn++;
         ClearScr();
         DrawGame(g);
-        g.progress = GetWon(g);
+        g.Progress == GetWon(g);
 
-    } while (g.progress == InProgress);
+    } while (g.Progress == InProgress);
 
     Congrats(g);
     DeinitGame(g);
