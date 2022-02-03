@@ -267,10 +267,10 @@ KrestCoord GetCompCoord(KrestGame& g)
                 g.ppField[x][y] = g.Comp;
                 if (GetWon(g) == CompWin)
                 {
-                    g.ppField[x][y] == Empty;
+                    g.ppField[x][y] = Empty;
                     return { x, y };
                 }
-                g.ppField[x][y] == Empty;
+                g.ppField[x][y] = Empty;
             }
         }
     }
@@ -283,10 +283,10 @@ KrestCoord GetCompCoord(KrestGame& g)
                 g.ppField[x][y] = g.Man;
                 if (GetWon(g) == ManWin)
                 {
-                    g.ppField[x][y] == Empty;
+                    g.ppField[x][y] = Empty;
                     return { x, y };
                 }
-                g.ppField[x][y] == Empty;
+                g.ppField[x][y] = Empty;
             }
         }
     }
@@ -304,8 +304,7 @@ int main()
         {
             KrestCoord c = GetManCoord(g);
             g.ppField[c.x][c.y] = g.Man;
-        }
-        else
+        } else
         {
             KrestCoord c = GetCompCoord(g);
             g.ppField[c.x][c.y] = g.Comp;
